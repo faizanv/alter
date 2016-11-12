@@ -2,20 +2,37 @@ from bs4 import BeautifulSoup
 import requests
 import sys
 from keys import headers
+import urllib2
 
 url = "https://api.projectoxford.ai/vision/v1.0/describe"
 
 def main():
     args = sys.argv
-    route = args[1]
+    site = args[1]
+    root = args[2]
 
-    soup = BeautifulSoup(open('index.html'), 'html.parser')
+    response = requests.get(site)
+
+    soup = BeautifulSoup(response.content, 'html.parser')
 
     for img in soup.find_all('img'):
-        if 'alt' not in img:
-            description = getDescription(route + img['src'])
+        if not img.has_attr('alt'):
+            link = root + img['src']
+            print link
+            description = getDescription(link)
             if description is not None:
                 print description
+            else:
+                print 'Could not get description'
+        elif img['alt'] == '':
+            description = getDescription(root + img['src'])
+            if description is not None:
+                print description
+            else:
+                print 'Could not get description'
+        else:
+            print 'alt already there'
+            print img['alt']
 
 def getDescription(src):
     res = requests.request("POST", url, headers=headers, json={"url": src})
