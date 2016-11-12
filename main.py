@@ -25,7 +25,9 @@ def main():
             else:
                 print 'Could not get description'
         elif img['alt'] == '':
-            description = getDescription(root + img['src'])
+            link = root + img['src']
+            print link
+            description = getDescription(link)
             if description is not None:
                 print description
             else:
@@ -43,6 +45,7 @@ def getDescription(src):
             result += desc['text'] + '. '
         return result
     else:
+        print res.text
         return None
 
 if __name__ == '__main__':
