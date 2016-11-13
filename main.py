@@ -21,34 +21,37 @@ def main():
 
     counter = 0
     for img in soup.find_all('img'):
-        if not img.has_attr('alt'):
-            link = root + img['src']
-            print link
-            description = getDescription(link)
+        if not img.has_attr('alt') or img['alt'] == '':
+            description = ''
+            if not isWorkingUrl(img['src']):
+                link = root + img['src']
+                description = getDescription(link)
+            else:
+                description = getDescription(img['src'])
             if description is not None:
                 print description
                 img['alt'] = description
                 counter += 1
             else:
                 print 'Could not get description'
-        elif img['alt'] == '':
-            link = root + img['src']
-            print link
-            description = getDescription(link)
-            if description is not None:
-                print description
-                img['alt'] = description
-            else:
-                print 'Could not get description'
         else:
             print 'alt already there'
             print img['alt']
 
-    html = soup.prettify("utf-8")
-    with open(outputFileName, "wb") as file:
-        file.write(html)
+    if counter == 0:
+        print 'There were no succesful alt creations. Boo'
+    else:
+        html = soup.prettify("utf-8")
+        with open(outputFileName, "wb") as file:
+            file.write(html)
+        print "Outputted to {} with {} new alt tags".format(outputFileName, counter)
 
-    print "Outputted to {} with {} new alt tags".format(outputFileName, counter)
+def isWorkingUrl(url):
+    try:
+        res = requests.get(url)
+        return res.status_code == requests.codes.ok
+    except requests.exceptions.RequestException as e:
+        return False
 
 def getDescription(src):
     res = requests.request("POST", url, headers=headers, json={"url": src})
