@@ -1,4 +1,4 @@
-# ALTernative Imagery
+![alt text](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/440/953/datas/gallery.jpg "alternative imagery logo")
 Adding alt attributes to your img tags because you're too lazy to do so [#CalHacks3.0](https://devpost.com/software/alternativeimagery)
 
 ## What?
