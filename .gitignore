@@ -1,3 +1,4 @@
 keys.py
 *.pyc
 *.html
+.DS_Store
